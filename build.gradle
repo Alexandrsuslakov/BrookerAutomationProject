@@ -11,17 +11,23 @@ repositories {
 
 dependencies {
     //JUnit 5
-    testImplementation platform('org.junit:junit-bom:5.10.0')
+   implementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
 
     //RestAssured
-    testImplementation 'io.rest-assured:rest-assured:5.5.1' //testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '5.5.1'
+    implementation 'io.rest-assured:rest-assured:5.5.1' //testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '5.5.1'
 
     //JSON parser
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.18.2'
 
     //AssertJ
-    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.27.3'
+    implementation group: 'org.assertj', name: 'assertj-core', version: '3.27.3'
+
+    // Logback (реализация SLF4J)
+    implementation 'ch.qos.logback:logback-classic:1.2.3'
+
+    // SLF4J API
+    implementation 'org.slf4j:slf4j-api:1.7.30'
 
 }
 
