@@ -28,7 +28,7 @@ public class APIClient {
             }
             properties.load(input);
         } catch (IOException e) {
-            throw new IllegalStateException("Unable to load configuration file:" + configFileName,e);
+            throw new IllegalStateException("Unable to load configuration file:" + configFileName, e);
         }
 
         return properties.getProperty("baseUrl");
@@ -40,7 +40,8 @@ public class APIClient {
                 .header("Content-Type", "application/json")
                 .header("Accept", "application/json");
     }
-    public Response ping(){
+
+    public Response ping() {
         return getRequestSpec()
                 .when()
                 .get(ApiEndpoints.PING.getPath())
@@ -51,7 +52,8 @@ public class APIClient {
 
 
     }
-    public Response getBooking(){
+
+    public Response getBooking() {
         return getRequestSpec()
                 .when()
                 .get(ApiEndpoints.BOOKING.getPath())
@@ -62,10 +64,11 @@ public class APIClient {
 
 
     }
-    public Response getBookingById(){
+
+    public Response getBookingById(int bookingId) {
         return getRequestSpec()
                 .when()
-                .get(ApiEndpoints.BOOKINGBYID.getPath())
+                .get(ApiEndpoints.BOOKING.getPath() + "/" + bookingId)
                 .then()
                 .statusCode(200)
                 .extract()
