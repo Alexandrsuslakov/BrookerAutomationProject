@@ -32,7 +32,7 @@ public class GetBookingByIdTest {
     //Тест на получение bookingid()
     @ParameterizedTest
     @CsvSource({
-            "1"
+            "3262"
     })
     public void testGetBookingById(int bookingId) throws Exception {
         logger.debug("Запуск теста для bookingId: {}", bookingId); // Логирование начала теста
