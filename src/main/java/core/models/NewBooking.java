@@ -1,27 +1,15 @@
 package core.models;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
-
-public class BookingById {
-
+@JsonInclude(JsonInclude.Include.NON_DEFAULT)
+public class NewBooking {
 
     private String firstname;
     private String lastname;
     private int totalprice;
-    private boolean depositpaid;
+    private Boolean depositpaid;
     private Bookingdates bookingdates;
     private String additionalneeds;
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
 
     public String getFirstname() {
         return firstname;
@@ -29,6 +17,14 @@ public class BookingById {
 
     public void setFirstname(String firstname) {
         this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     public int getTotalprice() {
@@ -39,11 +35,11 @@ public class BookingById {
         this.totalprice = totalprice;
     }
 
-    public boolean isDepositpadid() {
+    public Boolean isDepositpaid() {
         return depositpaid;
     }
 
-    public void setDepositpaid(boolean depositpaid) {
+    public void setDepositpaid(Boolean depositpaid) {
         this.depositpaid = depositpaid;
     }
 
@@ -63,15 +59,11 @@ public class BookingById {
         this.additionalneeds = additionalneeds;
     }
 
-    @JsonCreator
-    public BookingById(
-            @JsonProperty("firstname") String firstname,
-            @JsonProperty("lastname") String lastname,
-            @JsonProperty("totalprice") int totalprice,
-            @JsonProperty("depositpaid") boolean depositpaid,
-            @JsonProperty("bookingdates") Bookingdates bookingdates,
-            @JsonProperty("additionalneeds") String additionalneeds) {
+    public NewBooking() {
+    } // Поля остаются с значениями по умолчанию
 
+    public NewBooking(String firstname, String lastname, int totalprice,
+                      boolean depositpaid, Bookingdates bookingdates, String additionalneeds) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.totalprice = totalprice;

@@ -4,19 +4,18 @@ public class Bookingdates {
     private String checkin;
     private String checkout;
 
-    public String getCheckin() {
-        return checkin;
-    }
+    // Пустой конструктор для Jackson
+    public Bookingdates() {}
 
-    public void setCheckin(String checkin) {
+    public Bookingdates (String checkin, String checkout){
         this.checkin = checkin;
-    }
-
-    public String getCheckout() {
-        return checkout;
-    }
-
-    public void setCheckout(String checkout) {
         this.checkout = checkout;
     }
+
+    // Геттеры и сеттеры
+    public String getCheckin() { return checkin; }
+    public void setCheckin(String checkin) { this.checkin = checkin; }
+
+    public String getCheckout() { return checkout; }
+    public void setCheckout(String checkout) { this.checkout = checkout; }
 }

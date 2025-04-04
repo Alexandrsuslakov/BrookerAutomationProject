@@ -57,12 +57,12 @@ public class GetBookingByIdTest {
 
         // Проверка значения полей
         assertEquals("Mark", bookingById.getFirstname(), "Имя пользователя не совпадает");
-        assertEquals("Ericsson", bookingById.getLastname(), "Неверная страница");
+        assertEquals("Ericsson", bookingById.getLastname(), "Неверная Фамилия");
         assertEquals(381, bookingById.getTotalprice(), "Неверная сумма");
-        assertEquals(false, bookingById.isDepositpadid(), "Неверное общее кол-во страниц");
+        assertEquals(false, bookingById.isDepositpadid(), "Неверное значение");
         assertEquals("Breakfast", bookingById.getAdditionalneeds(), "Неверное значение");
-        assertEquals("2019-01-08", bookingById.getBookingdates().getCheckin(), "Неверная дата последнего посещения");
-        assertEquals("2020-04-27", bookingById.getBookingdates().getCheckout(), "Неверная дата окончания последней сессии");
+        assertEquals("2019-01-08", bookingById.getBookingdates().getCheckin(), "Неверная дата заезда");
+        assertEquals("2020-04-27", bookingById.getBookingdates().getCheckout(), "Неверная дата выезда");
 
     }
 }

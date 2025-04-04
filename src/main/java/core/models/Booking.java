@@ -8,7 +8,7 @@ public class Booking {
 
 //констурктор
     @JsonCreator
-    public Booking(@JsonProperty("bookingId") int bookingid){
+    public Booking(@JsonProperty("bookingid") int bookingid){
         this.bookingid =bookingid;
     }
 
