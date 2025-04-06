@@ -22,6 +22,7 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Stream;
 
+import static io.qameta.allure.Allure.step;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -39,16 +40,19 @@ public class GetBookingTest {
     public void setup() throws JsonProcessingException {
         apiClient = new APIClient();
 
+        step("Создание тестовых данных");
         Response responseJim = apiClient.createBooking("Jim", "Brown", 111, true, "2018-01-01", "2018-01-02", "Breakfast");
         AssertionsForClassTypes.assertThat(responseJim.getStatusCode()).isEqualTo(200);
 
         createdBookingJim = responseJim.as(CreatedBooking.class);
 
+        step("Создание тестовых данных");
         Response responseBoby = apiClient.createBooking("Boby", "Brown", 222, false, "2022-01-01", "2022-02-01", "Breakfast");
         AssertionsForClassTypes.assertThat(responseBoby.getStatusCode()).isEqualTo(200);
 
         createdBookingBoby = responseBoby.as(CreatedBooking.class);
 
+        step("Создание тестовых данных");
         Response responseAlex = apiClient.createBooking("Alex", "Brown", 333, true, "2021-01-01", "2021-02-01", "Breakfast");
         AssertionsForClassTypes.assertThat(responseAlex.getStatusCode()).isEqualTo(200);
 
@@ -89,6 +93,7 @@ public class GetBookingTest {
             getBookingRQ.setCheckout(checkout);
         }
 
+        step("Отправка Get-запроса");
         Response responseGet = apiClient.getBooking(getBookingRQ);
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -121,7 +126,7 @@ public class GetBookingTest {
         if (checkout != null) {
             getBookingRQ.setCheckout(checkout);
         }
-
+        step("Отправка Get-запроса");
         Response responseGet = apiClient.getBooking(getBookingRQ);
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -131,18 +136,26 @@ public class GetBookingTest {
         );
 
         assertThat(responseGet.getStatusCode()).isEqualTo(200);
+
+        step("Проверка длинны массива");
         assertThat(bookings).hasSize(1);
+
+        step("Проверка данных в ответе");
         assertThat(bookings.get(0)).isEqualTo(createdBookingJim.getBookingid());
     }
     @AfterAll
     public void deleteObject() {
         apiClient.createToken("admin", "password123");
+
+        step("Очистка данных после выполнения тестов");
         Response deleteResponseJim = apiClient.deleteBooking(createdBookingJim.getBookingid());
         AssertionsForClassTypes.assertThat(deleteResponseJim.getStatusCode()).isEqualTo(200);
 
+        step("Очистка данных после выполнения тестов");
         Response deleteResponseBoby = apiClient.deleteBooking(createdBookingBoby.getBookingid());
         AssertionsForClassTypes.assertThat(deleteResponseBoby.getStatusCode()).isEqualTo(200);
 
+        step("Очистка данных после выполнения тестов");
         Response deleteResponseAlex = apiClient.deleteBooking(createdBookingAlex.getBookingid());
         AssertionsForClassTypes.assertThat(deleteResponseAlex.getStatusCode()).isEqualTo(200);
     }

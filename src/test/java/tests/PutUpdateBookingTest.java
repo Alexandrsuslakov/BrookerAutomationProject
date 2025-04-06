@@ -7,9 +7,11 @@ import core.models.BookingById;
 import core.models.CreatedBooking;
 import core.models.NewBooking;
 import io.restassured.response.Response;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static io.qameta.allure.Allure.step;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -46,6 +48,7 @@ public class PutUpdateBookingTest {
         ObjectMapper objectMapper = new ObjectMapper();
         updatedBooking = objectMapper.readValue(responseBody, NewBooking.class);
 
+        step("Проверка тела ответа");
         assertThat(updatedBooking).isNotNull();
         assertEquals("BOBBY",updatedBooking.getFirstname());
         assertEquals("HENDRICSON",updatedBooking.getLastname());
@@ -57,6 +60,7 @@ public class PutUpdateBookingTest {
         ObjectMapper objectMapperGet = new ObjectMapper();
         Response responseGet = apiClient.getBookingById(idBooking);
 
+        step("Проверка корректности обновленных данных");
         BookingById bookingById = objectMapperGet.readValue(responseGet.asString(), BookingById.class);
         assertEquals("BOBBY", bookingById.getFirstname(), "Имя пользователя не совпадает");
         assertEquals("HENDRICSON", bookingById.getLastname(), "Неверная Фамилия");
@@ -67,9 +71,24 @@ public class PutUpdateBookingTest {
         assertEquals("2019-01-02", bookingById.getBookingdates().getCheckout(), "Неверная дата выезда");
 
     }
+    @Test
+    public void testUpdateBookingNoToken() throws JsonProcessingException {
+        apiClient.setToken(null);
+
+        step("Попытка обновления бронироваиня без токена");
+        Response response = apiClient.putUpdateBooking(idBooking,"LOLA","CATCH",6667,true,"2018-01-02","2019-01-02","Dinner");
+        assertThat(response.getStatusCode()).isEqualTo(403);
+
+        String responseBody = response.asString();
+        Assertions.assertThat(responseBody).isEqualTo("Forbidden");
+
+
+    }
     @AfterEach
     public void deleteObject() {
         apiClient.createToken("admin", "password123");
+
+        step("Удаление данных после завершения теста");
         Response deleteResponse = apiClient.deleteBooking(createdBooking.getBookingid());
         assertThat(apiClient.getBookingById(createdBooking.getBookingid()).getStatusCode()).isEqualTo(404);
 

@@ -8,12 +8,14 @@ import core.models.CreatedBooking;
 import core.models.NewBooking;
 import core.models.Bookingdates;
 import io.restassured.response.Response;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import static io.qameta.allure.Allure.step;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -27,6 +29,7 @@ public class PatchUpdateBookingTest {
         apiClient = new APIClient();
         apiClient.createToken("admin", "password123");
 
+        step("Создание тестовых данных перед выполнением теста");
         Response response = apiClient.createBooking("Jim", "Brown", 111, true, "2018-01-01", "2019-01-01", "Breakfast");
         assertThat(response.getStatusCode()).isEqualTo(200);
 
@@ -75,12 +78,13 @@ public class PatchUpdateBookingTest {
         }
 
         ObjectMapper objectMapper = new ObjectMapper();
-
+        step("Обновления бронирования");
         Response updateResponse = apiClient.patchUpdateBooking(idBook, newBooking);
         assertThat(updateResponse.getStatusCode()).isEqualTo(200);
 
         NewBooking updatedBooking = objectMapper.readValue(updateResponse.asString(), NewBooking.class);
 
+        step("Проверяем полученный ответ");
             if (firstname != null && !firstname.isEmpty()) {
                 assertEquals(updatedBooking.getFirstname(), newBooking.getFirstname(), "Имя пользователя не совпадает");
             } else {
@@ -124,9 +128,27 @@ public class PatchUpdateBookingTest {
                 assertEquals(updatedBooking.getAdditionalneeds(), createdBooking.getBooking().getAdditionalneeds(), "Неверное значение");
             }
         }
+
+    @Test
+    public void testUpdateBookingNoToken() throws JsonProcessingException {
+        apiClient.setToken(null);
+
+        NewBooking newBooking = new NewBooking();
+
+        step("Попытка обновления бронироваиня без токена");
+        Response updateResponse = apiClient.patchUpdateBooking(idBook,newBooking);
+        assertThat(updateResponse.getStatusCode()).isEqualTo(403);
+
+        String responseBody = updateResponse.asString();
+        Assertions.assertThat(responseBody).isEqualTo("Forbidden");
+
+
+    }
     @AfterEach
     public void deleteObject() {
         apiClient.createToken("admin", "password123");
+
+        step("Очистка тестовых данных после завершения тестов");
         Response deleteResponse = apiClient.deleteBooking(createdBooking.getBookingid());
         assertThat(apiClient.getBookingById(createdBooking.getBookingid()).getStatusCode()).isEqualTo(404);
     }
