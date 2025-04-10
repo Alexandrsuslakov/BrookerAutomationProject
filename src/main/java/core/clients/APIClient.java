@@ -1,5 +1,7 @@
 package core.clients;
 
+import core.models.GetBookingRQ;
+import core.models.NewBooking;
 import core.settings.ApiEndpoints;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
@@ -93,11 +95,14 @@ public class APIClient {
 
     }
 
-    public Response getBooking() {
+    public Response getBooking(GetBookingRQ getBookingRQ) {
         return getRequestSpec()
+                .log().all()
                 .when()
+                .body(getBookingRQ)
                 .get(ApiEndpoints.BOOKING.getPath())
                 .then()
+                .log().all()
                 .statusCode(200)
                 .extract()
                 .response();
@@ -146,7 +151,32 @@ public class APIClient {
 
 
     }
+    public Response putUpdateBooking(int bookingId, String firstname, String lastname, int totalprice, boolean depositpaid,String checkin, String checkout, String additionalneeds) {
+        String requestBody = String.format("{\"firstname\": \"%s\", \"lastname\": \"%s\", \"totalprice\": %d, \"depositpaid\": %b, \"bookingdates\" : { \"checkin\": \"%s\", \"checkout\": \"%s\"}, \"additionalneeds\": \"%s\"}", firstname, lastname, totalprice, depositpaid, checkin, checkout, additionalneeds);
+        return getRequestSpec()
+                .log().all()
+                .pathParam("id",bookingId)
+                .when()
+                .body(requestBody)
+                .put(ApiEndpoints.BOOKING.getPath() + "/{id}")
+                .then()
+                .log().all()
+                .extract()
+                .response();
+    }
 
+    public Response patchUpdateBooking(int bookingId, NewBooking newBooking) {
+        return getRequestSpec()
+                .log().all()
+                .pathParam("id",bookingId)
+                .when()
+                .body(newBooking)
+                .patch(ApiEndpoints.BOOKING.getPath() + "/{id}")
+                .then()
+                .log().all()
+                .extract()
+                .response();
+    }
 
 }
 
